@@ -1,0 +1,10 @@
+# Build Folders
+**/out
+**/build
+
+# Test Folders
+/test
+
+# Executables
+*.exe
+*.bat
