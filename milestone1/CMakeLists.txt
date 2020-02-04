@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0)
-project(J--_Compiler VERSION 1.0 LANGUAGES CXX)
+project(cj-- VERSION 1.0 LANGUAGES CXX)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY 
 	../out/
 )
@@ -8,17 +8,20 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY
 #[[
         Headers
 ]]
-#[[
+
 set(HEADERS
-	include/test.hpp
+	include/token.h
+	include/scanner.h
 )
-]]
+
 
 #[[
         Sources
 ]]
 set(SOURCES
 	src/main.cpp
+	src/token.cpp
+	src/scanner.cpp
 )
 
 #[[

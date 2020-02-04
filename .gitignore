@@ -3,8 +3,9 @@
 **/build
 
 # Test Folders
-/test
+**/test
 
 # Executables
 *.exe
 *.bat
+*.j--
