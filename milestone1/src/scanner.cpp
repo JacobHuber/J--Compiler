@@ -117,18 +117,19 @@ char Scanner::getEscape() {
 
 Token Scanner::nextToken() {
 	char ch;
+	bool avoidEscape;
 	std::string str;
 	
 s_start:
 	lexeme = "";
 
 	if (fs.eof())
-		goto s_exit;
+		goto s_eof;
 
 	readChar();
 
 	if (fs.eof())
-		goto s_exit;
+		goto s_eof;
 
 	switch (currChar) {
 		case '"':
@@ -167,8 +168,6 @@ s_start:
 			goto s_semi;
 		case ',':
 			goto s_comma;
-		case 'EOF':
-			goto s_eof;
 		
 		default:
 			if (isspace(currChar)) {
@@ -184,7 +183,6 @@ s_start:
 	}
 
 s_str:
-	bool avoidEscape;
 	str = "";
 
 	do {
@@ -207,13 +205,12 @@ s_str:
 			if (fs.eof())
 				break;
 
-			char escape = getEscape(); // Returns space on non escape character
-			if (escape == ' ') {
+			if (getEscape() == ' ') {
 				ungetChar();
 			} else {
 				str = str.substr(0, str.size() - 1);
-				str += escape;
-				if (escape == '\"')
+				str += getEscape();
+				if (getEscape() == '\"')
 					avoidEscape = true;
 			}
 		}
@@ -234,8 +231,8 @@ s_minus:
 s_mult:
 	return Token(lineNumber, MULT);
 s_div:
-	ch = readChar();
-	if (ch == '/') {
+	readChar();
+	if (currChar == '/') {
 		goto s_comment;
 	} else {
 		ungetChar();
@@ -245,8 +242,8 @@ s_div:
 s_mod:
 	return Token(lineNumber, MOD);
 s_lt:
-	ch = readChar();
-	if (ch == '=') {
+	readChar();
+	if (currChar == '=') {
 		goto s_lte;
 	} else {
 		ungetChar();
@@ -324,11 +321,11 @@ s_ident:
 	} while (isalpha2() || isdigit(currChar));
 
 	ungetChar();
-	TOKENTYPE t = checkReservedWord(lexeme);
-	if (t == IDENTIFIER)
+
+	if (checkReservedWord(lexeme) == IDENTIFIER)
 		return Token(lineNumber, IDENTIFIER, lexeme);
 
-	return Token(lineNumber, t);
+	return Token(lineNumber, checkReservedWord(lexeme));
 
 s_int:
 	do {
@@ -343,7 +340,7 @@ s_comment:
 	do {
 		readChar();	
 		if (fs.eof())
-			goto s_exit;
+			goto s_eof;
 	} while (!newLine());
 
 	goto s_start;
