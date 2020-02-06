@@ -43,9 +43,9 @@ char Scanner::readChar() {
 	if (isspace(c)) {
 		if (newLine())
 			lineNumber += 1;
-	} else {
-		lexeme += currChar;
 	}
+	
+	lexeme += currChar;
 
 
 	return c;
@@ -58,9 +58,9 @@ void Scanner::ungetChar() {
 		if (newLine())
 			lineNumber -= 1;
 
-	} else {
-		lexeme = lexeme.substr(0, lexeme.size()-1);
 	}
+
+	lexeme = lexeme.substr(0, lexeme.size()-1);
 }
 
 bool Scanner::isalpha2() {
