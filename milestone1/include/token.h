@@ -1,31 +1,30 @@
-class Token {
-	public:
-		enum tokenType { IDENTIFIER, STRING, INTEGER, WORD, OPERATOR, OTHER, ENDFILE };
+#include <string>
 
+enum TOKENTYPE { IDENTIFIER, STRING, INTEGER, ENDFILE, // 
+				PLUS, MINUS, MULT, DIV, MOD, LT, GT, LTE, GTE, ASSIGN, EQ, NEQ, NOT, AND, OR, // Operators
+				LB, RB, LCB, RCB, SEMICOLON, COMMA, // Punctuation
+				TRUE, FALSE, BOOLEAN, INT, VOID, IF, ELSE, WHILE, BREAK, RETURN }; // Reserved Words
+
+class Token {
 	private:
 		int lineNumber;
-		tokenType type;
+		TOKENTYPE type;
+		std::string lexeme;
+		std::string val;
 
 	public:
-		Token(int l);
-		Token(int l, tokenType t);
-		tokenType getType();
+		Token(int l, TOKENTYPE t);
+		Token(int l, TOKENTYPE t, std::string lex);
+		Token(int l, TOKENTYPE t, std::string lex, std::string val);
+
 		int getLineNumber();
-};
+		TOKENTYPE getType();
+		
+		bool hasLexeme();
+		std::string getLexeme();
 
-class Word : Token {
-	public:
-		enum word { TRUE, FALSE, BOOLEAN, INT, VOID, IF, ELSE, WHILE, BREAK, RETURN };
-	
-	private:
-		word wordType;
-	
-	public:
-		Word(int l, word t);
-		word getWordType();
-};
+		bool hasVal();
+		std::string getVal();
 
-/*
-class Operator : Token {
-	enum type { +, -, *, /, %, <, >, <=, >=, =, ==, !=, !, &&, || };
-};*/
+		std::string getTypeStr();
+};

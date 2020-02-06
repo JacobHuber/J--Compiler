@@ -7,7 +7,8 @@ class Scanner {
 	std::string fileName;
 	std::fstream fs;
 
-	std::string lexeme = ""; // Used to gold current lexeme as it gets built
+	std::string lexeme = ""; // Used to hold current lexeme as it gets built
+	char currChar;
 
 	public:
 		Scanner(const Scanner&) = delete;
@@ -18,4 +19,10 @@ class Scanner {
 
 	private:
 		char readChar();
+		void ungetChar();
+		bool newLine();
+
+		bool isalpha2();
+
+		char getEscape();
 };

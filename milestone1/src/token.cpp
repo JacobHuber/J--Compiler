@@ -1,28 +1,55 @@
 #include "token.h"
 
-Token::Token(int l) {
-	lineNumber = l;
-}
+const std::string names[39] = { "IDENTIFIER", "STRING", "INTEGER", "ENDFILE",
+						"PLUS", "MINUS", "MULT", "DIV", "MOD", "LT", "GT", "LTE", "GTE", "ASSIGN", "EQ", "NEQ", "NOT", "AND", "OR",
+						"LB", "RB", "LCB", "RCB", "SEMICOLON", "COMMA",
+						"TRUE", "FALSE", "BOOLEAN", "INT", "VOID", "IF", "ELSE", "WHILE", "BREAK", "RETURN" };
 
-Token::Token(int l, Token::tokenType t) {
-	lineNumber = l;
+
+Token::Token(int n, TOKENTYPE t) {
+	lineNumber = n;
 	type = t;
 }
 
-Token::tokenType Token::getType() {
-	return type;
+Token::Token(int n, TOKENTYPE t, std::string lex) {
+	lineNumber = n;
+	type = t;
+	lexeme = lex;
 }
+
+
+Token::Token(int n, TOKENTYPE t, std::string lex, std::string v) {
+	lineNumber = n;
+	type = t;
+	lexeme = lex;
+	val = v;
+}
+
 
 int Token::getLineNumber() {
 	return lineNumber;
 }
 
-
-Word::Word(int l, Word::word t) : Token::Token(l, Token::WORD) {
-	wordType = t;
+TOKENTYPE Token::getType() {
+	return type;
 }
 
-Word::word Word::getWordType() {
-	return wordType;
+bool Token::hasLexeme() {
+	return !lexeme.empty();
 }
 
+std::string Token::getLexeme() {
+	return lexeme;
+}
+
+bool Token::hasVal() {
+	return !val.empty();
+}
+
+std::string Token::getVal() {
+	return val;
+}
+
+std::string Token::getTypeStr() {
+	return names[type];
+}

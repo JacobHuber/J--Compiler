@@ -33,8 +33,21 @@ int main(int argc, char** argv) {
 	
 	Token t = scanner.nextToken();
 	while (1) {
-		if (t.getType() == Token::ENDFILE)
+		TOKENTYPE tokenType = t.getType();
+		
+		if (tokenType == ENDFILE)
 			break;
+
+		switch (tokenType) {
+			case (IDENTIFIER):
+			case (INTEGER):
+			case (STRING):
+				std::cout << "(" << t.getTypeStr().c_str() << ") '" << t.getLexeme() << "' found on line " << t.getLineNumber() << std::endl;
+				break;
+			default:
+				std::cout << "(" << t.getTypeStr().c_str() << ") found on line " << t.getLineNumber() << std::endl;
+				break;
+		};
 
 		t = scanner.nextToken();
 	}
