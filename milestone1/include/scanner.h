@@ -22,7 +22,7 @@ class Scanner {
 		Token nextToken();
 
 	private:
-		char readChar();
+		void readChar();
 		void ungetChar();
 		bool newLine();
 
