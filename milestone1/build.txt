@@ -1,0 +1,25 @@
+Script started on 2020-02-07 13:53:24-07:00 [TERM="xterm-256color" TTY="/dev/pts/48" COLUMNS="120" LINES="30"]
+]0;jacob.huber1@csx:~/Courses/411/J--Compiler/milestone1jacob.huber1@csx:~/Courses/411/J--Compiler/milestone1$ mkdir build
+]0;jacob.huber1@csx:~/Courses/411/J--Compiler/milestone1jacob.huber1@csx:~/Courses/411/J--Compiler/milestone1$ cd build
+]0;jacob.huber1@csx:~/Courses/411/J--Compiler/milestone1/buildjacob.huber1@csx:~/Courses/411/J--Compiler/milestone1/build$ cmake ..
+-- The CXX compiler identification is GNU 9.2.1
+-- Check for working CXX compiler: /usr/lib64/ccache/c++
+-- Check for working CXX compiler: /usr/lib64/ccache/c++ -- works
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /home/ugd/jacob.huber1/Courses/411/J--Compiler/milestone1/build
+]0;jacob.huber1@csx:~/Courses/411/J--Compiler/milestone1/buildjacob.huber1@csx:~/Courses/411/J--Compiler/milestone1/build$ make
+[35m[1mScanning dependencies of target cj--[0m
+[ 25%] [32mBuilding CXX object CMakeFiles/cj--.dir/src/main.cpp.o[0m
+[ 50%] [32mBuilding CXX object CMakeFiles/cj--.dir/src/token.cpp.o[0m
+[ 75%] [32mBuilding CXX object CMakeFiles/cj--.dir/src/scanner.cpp.o[0m
+[100%] [32m[1mLinking CXX executable ../out/cj--[0m
+[100%] Built target cj--
+]0;jacob.huber1@csx:~/Courses/411/J--Compiler/milestone1/buildjacob.huber1@csx:~/Courses/411/J--Compiler/milestone1/build$ exit
+exit
+
+Script done on 2020-02-07 13:53:59-07:00 [COMMAND_EXIT_CODE="0"]
