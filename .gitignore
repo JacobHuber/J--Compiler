@@ -9,3 +9,7 @@
 *.exe
 *.bat
 *.j--
+
+# Submissions
+*.zip
+*.notzip
