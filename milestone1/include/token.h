@@ -1,30 +1,34 @@
+// Jacob Huber - 30052459
+// CPSC 411 - TUT 03
+
 #include <string>
 
-enum TOKENTYPE { IDENTIFIER, STRING, INTEGER, ENDFILE, // 
-				PLUS, MINUS, MULT, DIV, MOD, LT, GT, LTE, GTE, ASSIGN, EQ, NEQ, NOT, AND, OR, // Operators
-				LB, RB, LCB, RCB, SEMICOLON, COMMA, // Punctuation
-				TRUE, FALSE, BOOLEAN, INT, VOID, IF, ELSE, WHILE, BREAK, RETURN }; // Reserved Words
+// Enums to distinguish type of token
+enum TOKENTYPE { IDENTIFIER, STRING, INTEGER, ENDFILE, // Lexeme Tokens
+				PLUS, MINUS, MULT, DIV, MOD, LT, GT, LTE, GTE, ASSIGN, EQ, NEQ, NOT, AND, OR, // Operator Tokens
+				LB, RB, LCB, RCB, SEMICOLON, COMMA, // Punctuation Tokens
+				TRUE, FALSE, BOOLEAN, INT, VOID, IF, ELSE, WHILE, BREAK, RETURN }; // Reserved Word Tokens
 
 class Token {
 	private:
-		int lineNumber;
-		TOKENTYPE type;
-		std::string lexeme;
-		std::string val;
+		int lineNumber; // The line that the Token occurs on
+		TOKENTYPE type; // The type of token (see enum above)
+		std::string lexeme; // The lexeme of the read token (see lexeme tokens in enum above)
+		std::string val; // The string value of a STRING token
 
 	public:
+		// Constructors
 		Token(int l, TOKENTYPE t);
 		Token(int l, TOKENTYPE t, std::string lex);
-		Token(int l, TOKENTYPE t, std::string lex, std::string val);
+		Token(int l, std::string lex, std::string val);
 
+		bool hasLexeme();
+		bool hasVal();
+
+		// Getters
 		int getLineNumber();
 		TOKENTYPE getType();
-		
-		bool hasLexeme();
 		std::string getLexeme();
-
-		bool hasVal();
 		std::string getVal();
-
 		std::string getTypeStr();
 };
