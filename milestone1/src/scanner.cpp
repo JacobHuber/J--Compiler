@@ -28,7 +28,7 @@ Scanner::~Scanner() {
 }
 
 bool Scanner::newLine() {
-	return (currChar == '\n' || currChar == '\r');
+	return (currChar == '\n');
 }
 
 // Reads the next char from this
