@@ -81,5 +81,5 @@ class Parser {
 		Parser(std::string fileName);
 		~Parser();
 
-		void fetchAST();
+		Node* fetchAST();
 };

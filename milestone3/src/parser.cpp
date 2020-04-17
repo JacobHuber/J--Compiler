@@ -266,6 +266,7 @@ Node Parser::functioninvocation() {
 Node Parser::functioninvocationhelper(Token i) {
 	match(LB);
 	fetch();
+	//pause();
 
 	Node fi = Node(n_functionInvocation);
 	fi.addChild(identhelper(i));
@@ -322,9 +323,8 @@ Node Parser::statementexpression() {
 Node Parser::breakstatement() {
 	Node brk = Node(n_break);
 	brk.setToken(lookAhead);
-	
+
 	match(SEMICOLON);
-	
 	return brk;
 }
 
@@ -333,6 +333,7 @@ Node Parser::returnstatement() {
 	ret.setToken(lookAhead);
 
 	fetch();
+
 	if (lookAhead.getType() != SEMICOLON) {
 		ret.addChild(expression());
 	}
@@ -808,9 +809,10 @@ Node Parser::typehelper(Token t) {
 	return typ;
 }
 
-void Parser::fetchAST() {
+Node* Parser::fetchAST() {
 	start();
-	printNode(root, 0);
+	return new Node(root);
+	//printNode(root, 0);
 }
 
 void Parser::printNode(Node n, int indent) {
@@ -837,8 +839,8 @@ void Parser::printNode(Node n, int indent) {
 	if (n.getToken().getType() != NULL) {
 		std::cout << ": " << n.getToken().getTypeStr() << "\n";
 	}*/
-
+	/*
 	std::vector<Node> c = n.getChildren();
 	for (int i = 0; i < c.size(); i++)
-		printNode(c[i], indent + 1);
+		printNode(c[i], indent + 1);*/
 }

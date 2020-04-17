@@ -5,7 +5,7 @@ Compiler for the language J-- written in C++
 ## Compile
 ```
 J--Compiler/milestone1$ mkdir build
-J--Compiler/milestone1/build$ cd build
+J--Compiler/milestone1$ cd build
 J--Compiler/milestone1/build$ cmake ..
 J--Compiler/milestone1/build$ make
 ```
