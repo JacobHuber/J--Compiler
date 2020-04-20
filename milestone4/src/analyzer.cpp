@@ -1,3 +1,6 @@
+// Jacob Huber - 30052459
+// CPSC 411 - TUT 03
+
 #include "analyzer.h"
 
 #include <iostream> // cout, cerr
@@ -535,7 +538,7 @@ void Analyzer::valueReturn(Node* n) {
 
 	if (t == n_return) {
 		std::vector<Node*> c = n->getChildren();
-		std::string ret_type;
+		std::string ret_type = "VOID";
 
 		if (c.size() > 0) {
 			NODETYPE ct = c[0]->getType();

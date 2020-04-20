@@ -1,3 +1,6 @@
+// Jacob Huber - 30052459
+// CPSC 411 - TUT 03
+
 #include "analyzer.h"
 #include <fstream> // std::fstream
 

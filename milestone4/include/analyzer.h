@@ -57,11 +57,11 @@ class Analyzer {
 		std::stack< stab > scope_stack;
 		std::stack< stab > reserve_stack;
 
-		void Analyzer::closeScope();
-		void Analyzer::openScope();
-		void Analyzer::scopeDeclare(std::string s, stab_e e);
-		stab_e Analyzer::searchAll(std::string s);
-		stab_e Analyzer::search(std::string s);
+		void closeScope();
+		void openScope();
+		void scopeDeclare(std::string s, stab_e e);
+		stab_e searchAll(std::string s);
+		stab_e search(std::string s);
 
 
 		stab_e passOne(Node* n, int depth);

@@ -1,3 +1,6 @@
+// Jacob Huber - 30052459
+// CPSC 411 - TUT 03
+
 #include "generator.h"
 #include <iostream> // cout, cerr
 
@@ -5,12 +8,12 @@
 Generator::Generator(std::string fn, Node* r) {
 	fileName = fn;
 
-	fs.open(fileName.c_str(), std::fstream::out);
+	/*fs.open(fileName.c_str(), std::fstream::out);
 
 	if (!fs.is_open()) {
 		std::cerr << "ERROR: Unable to open file '" << fileName.c_str() << "'\n";
 		exit(-1);
-	}
+	}*/
 
 	root = r;
 }
@@ -98,7 +101,7 @@ std::string Generator::addLocal(Node* varDecl) {
 
 std::string Generator::addParam(Node* varDecl) {
 	std::string ident = varDecl->getChildren()[1]->getToken().getLexeme();
-	std::string out = "$P" + std::to_string(lvc);
+	std::string out = "$P" + std::to_string(pc);
 
 	scopeDeclare(ident, out);
 
@@ -222,17 +225,18 @@ void Generator::generateCode() {
 
 	output += ")";
 
+	/*
 	for (auto it = scope_stack.top().begin(); it != scope_stack.top().end(); ++it) {
 		std::string name = it->first;
 		std::string var = it->second;
 
 		std::cout << name << ": " << var;
 		std::cout << "\n";
-	}
+	}*/
 
 	closeScope();
 
-	fs << output;
+	std::cout << output;
 }
 
 std::string Generator::createMain(Node* main) {
@@ -473,16 +477,16 @@ std::string Generator::createLiteral(Node* literal) {
 
 		output += "i32.const " + std::to_string(stringSize) + "\n";
 		
-		stringSize += (int) val.size() - 1;
+		stringSize += (int) val.size();
 
-		output += "i32.const " + std::to_string(stringSize);
+		output += "i32.const " + std::to_string(val.size());
 	}
 	return output + "\n";
 }
 
 void Generator::addString(std::string s) {
 	strings += "(data 0 (i32.const " + std::to_string(stringSize) + ") \"" + s + "\")\n";
-	stringSize += (int) s.size() - 1;
+	stringSize += (int) s.size();
 }
 
 std::string Generator::createFunctionInvocation(Node* invocation) {
@@ -491,6 +495,7 @@ std::string Generator::createFunctionInvocation(Node* invocation) {
 	std::vector<Node*> children = invocation->getChildren();
 
 	std::string name = children[0]->getToken().getLexeme();
+
 	std::string func = searchAll(name);
 
 
@@ -509,6 +514,10 @@ std::string Generator::createFunctionInvocation(Node* invocation) {
 
 
 	output += "call " + func + "\n";
+
+	if (name.compare("halt") == 0) {
+		output += "unreachable\n";	
+	}
 
 	return output;
 }
@@ -541,16 +550,18 @@ std::string Generator::setIdentifier(Node* identifier) {
 std::string Generator::createReturn(Node* ret) {
 	std::string output;
 
-	Node* result = ret->getChildren()[0];
+	if (ret->getChildren().size() > 0) {
+		Node* result = ret->getChildren()[0];
 
-	if (result->getType() == n_assign) {
-		output += createAssign(result);
-		output += getIdentifier(result->getChildren()[0]);
-	} else {
-		output += expression(result);
+		if (result->getType() == n_assign) {
+			output += createAssign(result);
+			output += getIdentifier(result->getChildren()[0]);
+		} else {
+			output += expression(result);
+		}
 	}
-	output += "return\n";
 
+	output += "return\n";
 	return output;
 }
 
@@ -562,7 +573,14 @@ std::string Generator::createWhile(Node* statement) {
 	std::vector<Node*> children = statement->getChildren();
 
 	std::string condition = expression(children[0]);
-	std::string block = createBlock(children[1]);
+
+	std::string block;
+
+	if (children[1]->getType() == n_block) {
+		block = createBlock(children[1]);	
+	} else {
+		block = createBlock(statement);
+	}
 
 	output += "(block $B" + std::to_string(ws) + "\n";
 	output += "(loop $W" + std::to_string(ws) + "\n";
@@ -624,7 +642,8 @@ std::string Generator::createIfStmt(Node* statement) {
 std::string Generator::getRTS() {
 	std::string output;
 
-	output += "\n(func $printi (param $i i32) (local $n i32)\n(i32.eqz\n(get_local $i))\nif ;; if (i == 0)\ni32.const 48\ncall $printc ;; print '0'\nelse ;; (i != 0)\n;; n = 1\ni32.const 10\nset_local $n\n;; while (i / n > 0)\nloop\n(i32.eqz\n(i32.div_s\n(get_local $i)\n(get_local $n)))\nif ;; if (i / n == 0) Found cap n (n digits)\nloop\n;; while (n != 1)\n;; n /= 10\n(i32.div_s\n(get_local $n)\n(i32.const 10))\nset_local $n\n;; putchar (print left most digit)\n(i32.add\n(i32.const 48)\n;; offset for ascii digits\n(i32.div_s \n;; $i / $n (integer division)\n(get_local $i)\n(get_local $n)))\ncall $printc\n;; i = i - (i / n) * n (this gets rid of the highest order digit in i)\n(i32.sub\n(get_local $i)\n(i32.mul\n(i32.div_s\n(get_local $i)\n(get_local $n))\n(get_local $n)))\nset_local $i\n;; loop statement\n(i32.ne\n(get_local $n)\n(i32.const 1))\nbr_if 0\nreturn\nend\nend\n;; Cap isn't found yet\n;; n *= 10\n(i32.mul\n(get_local $n)\n(i32.const 10))\nset_local $n\nbr 0\nend\nend)";
+
+	output += "(func $printi (param $i i32) (local $n i32)\nget_local $i\ni32.const 2000000000\ni32.ge_s\nif\ni32.const 50\ncall $printc\nget_local $i\ni32.const 2000000000\ni32.sub\nset_local $i\nend\nget_local $i\ni32.const -2000000000\ni32.le_s\nif\ni32.const 45\ncall $printc\ni32.const 50\ncall $printc\nget_local $i\ni32.const 2000000000\ni32.add\ni32.const -1\ni32.mul\nset_local $i\nend\nget_local $i\ni32.const 0\ni32.lt_s\nif\ni32.const 45\ncall $printc\nget_local $i\ni32.const -1\ni32.mul\nset_local $i\nend\n(i32.eqz\n(get_local $i))\nif ;; if (i == 0)\ni32.const 48\ncall $printc ;; print '0'\nelse ;; (i != 0)\n;; n = 10\ni32.const 10\nset_local $n\n;; while (i / n > 0)\nloop\n(i32.lt_u\n(i32.div_s\n(get_local $i)\n(get_local $n))\n(i32.const 10))\nif ;; if (i / n == 0) Found cap n (n digits)\nloop ;; while (n != 1)\n;; putchar (print left most digit)\n(i32.add\n(i32.const 48) ;; offset for ascii digits\n(i32.div_s ;; $i / $n (integer division)\n(get_local $i)\n(get_local $n)))\ncall $printc\n;; i = i - (i / n) * n (this gets rid of the highest order digit in i)\nget_local $i\nget_local $n\ni32.rem_s\nset_local $i\n;; n /= 10\n(i32.div_s\n(get_local $n)\n(i32.const 10))\nset_local $n\n;; loop statement\n(i32.ne\n(get_local $n)\n(i32.const 0))\nbr_if 0\nreturn\nend\nend\n;; Cap isn't found yet\n;; n *= 10\n(i32.mul\n(get_local $n)\n(i32.const 10))\nset_local $n\nbr 0\nend\nend)";
 
 	output += ";; memory start location\n;; length of string (how many bytes)\n(func $prints (param $start i32) (param $bytes i32)\n;; current byte\n(local $i i32) \n;; every 4 bytes increase by 1 (load only loads 4 bytes at a time, gotta keep track of this)\n(local $offset i32)\n;; Initialize locals\ni32.const 0\nset_local $i\ni32.const 0\nset_local $offset\n(loop $charLoop\n;; loaded = load(start + offset) - loaded\n(i32.load\n(i32.add\n(get_local $start)\n(i32.mul\n(get_local $offset)\n(i32.const 4))))\n;; loaded = loaded % (2^( 8 * (i+1) )  )\n;; removes higher order bits\n(i32.sub\n(i32.const 24)\n(i32.mul\n(i32.const 8)\n(get_local $i)))\ni32.shl\ni32.const 24\ni32.shr_u\ncall $printc\n;; i += 1\n(i32.add\n(get_local $i)\n(i32.const 1))\nset_local $i\nget_local $i\ni32.const 4\ni32.ge_s\n;; if (i >= 4) {\n;;	i = 0\n;;	offset += 1\n;; }\nif\ni32.const 0\nset_local $i\n(i32.add\n(get_local $offset)\n(i32.const 1))\nset_local $offset\nend\n;; bytes <= (offset * 4) + i\n(i32.add\n(i32.mul\n(get_local $offset)\n(i32.const 4))\n(get_local $i))\nget_local $bytes\ni32.lt_s\nbr_if $charLoop))";
 
